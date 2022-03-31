@@ -4,7 +4,8 @@ import {
   Freezed as FreezedEvent,
   Minted as MintedEvent,
   Transfer as TransferEvent,
-  Updated as UpdatedEvent
+  Updated as UpdatedEvent,
+  STokensManager
 } from "../generated/STokensManager/STokensManager"
 import {
   Approval,
@@ -12,68 +13,86 @@ import {
   Freezed,
   Minted,
   Transfer,
-  Updated
+  Updated,
+  STokenIdAmount,
+  TotalAmount,
 } from "../generated/schema"
 
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
-  entity.tokenId = event.params.tokenId
-  entity.save()
-}
+// export function handleApproval(event: ApprovalEvent): void {
+//   let entity = new Approval(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   entity.owner = event.params.owner
+//   entity.approved = event.params.approved
+//   entity.tokenId = event.params.tokenId
+//   entity.save()
+// }
 
-export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  let entity = new ApprovalForAll(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.owner = event.params.owner
-  entity.operator = event.params.operator
-  entity.approved = event.params.approved
-  entity.save()
-}
+// export function handleApprovalForAll(event: ApprovalForAllEvent): void {
+//   let entity = new ApprovalForAll(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   entity.owner = event.params.owner
+//   entity.operator = event.params.operator
+//   entity.approved = event.params.approved
+//   entity.save()
+// }
 
-export function handleFreezed(event: FreezedEvent): void {
-  let entity = new Freezed(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.tokenId = event.params.tokenId
-  entity.freezingUser = event.params.freezingUser
-  entity.save()
-}
+// export function handleFreezed(event: FreezedEvent): void {
+//   let entity = new Freezed(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   entity.tokenId = event.params.tokenId
+//   entity.freezingUser = event.params.freezingUser
+//   entity.save()
+// }
 
 export function handleMinted(event: MintedEvent): void {
-  let entity = new Minted(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let entity = new STokenIdAmount(
+    event.params.tokenId.toString()
   )
-  entity.tokenId = event.params.tokenId
-  entity.owner = event.params.owner
-  entity.property = event.params.property
   entity.amount = event.params.amount
-  entity.price = event.params.price
   entity.save()
+  let day = event.block.timestamp.toI32() / 86400
+  let totalAmount = TotalAmount.load(day.toString())
+  if (totalAmount === null) {
+    totalAmount = new TotalAmount(
+      day.toString()
+    )
+  }
+  totalAmount.amount = totalAmount.amount.plus(event.params.amount)
+  totalAmount.save()
 }
 
-export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.tokenId = event.params.tokenId
-  entity.save()
-}
+// export function handleTransfer(event: TransferEvent): void {
+//   let entity = new Transfer(
+//     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+//   )
+//   entity.from = event.params.from
+//   entity.to = event.params.to
+//   entity.tokenId = event.params.tokenId
+//   entity.save()
+// }
 
 export function handleUpdated(event: UpdatedEvent): void {
-  let entity = new Updated(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.tokenId = event.params.tokenId
+  let entity = STokenIdAmount.load(event.params.tokenId.toString())
+  let delta = event.params.amount
+  if (entity === null) {
+    entity = new STokenIdAmount(
+      event.params.tokenId.toString()
+    )
+  } else {
+    delta = delta.minus(entity.amount)
+  }
   entity.amount = event.params.amount
-  entity.price = event.params.price
-  entity.cumulativeReward = event.params.cumulativeReward
-  entity.pendingReward = event.params.pendingReward
   entity.save()
+  let day = event.block.timestamp.toI32() / 86400
+  let totalAmount = TotalAmount.load(day.toString())
+  if (totalAmount === null) {
+    totalAmount = new TotalAmount(
+      day.toString()
+    )
+  }
+  totalAmount.amount = totalAmount.amount.plus(delta)
+  totalAmount.save()
 }

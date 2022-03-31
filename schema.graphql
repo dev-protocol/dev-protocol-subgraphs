@@ -42,3 +42,13 @@ type Updated @entity {
   cumulativeReward: BigInt! # uint256
   pendingReward: BigInt! # uint256
 }
+
+type STokenIdAmount @entity {
+  id: ID! #sToken id
+  amount: BigInt! #staking amount
+}
+
+type TotalAmount @entity {
+  id: ID! #day
+  amount: BigInt! #staking amount
+}

@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
@@ -6,8 +6,9 @@ dataSources:
     name: STokensManager
     network: mainnet
     source:
-      address: "0x1F10895EA66eb478D0ea512c32183F820E2f4503"
+      address: "0x50489Ff5f879A44C87bBA85287729D663b18CeD5"
       abi: STokensManager
+      startBlock: 13349972
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -23,16 +24,16 @@ dataSources:
         - name: STokensManager
           file: ./abis/STokensManager.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: Freezed(uint256,address)
-          handler: handleFreezed
+        # - event: Approval(indexed address,indexed address,indexed uint256)
+        #   handler: handleApproval
+        # - event: ApprovalForAll(indexed address,indexed address,bool)
+        #   handler: handleApprovalForAll
+        # - event: Freezed(uint256,address)
+        #   handler: handleFreezed
         - event: Minted(uint256,address,address,uint256,uint256)
           handler: handleMinted
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
+        # - event: Transfer(indexed address,indexed address,indexed uint256)
+        #   handler: handleTransfer
         - event: Updated(uint256,uint256,uint256,uint256,uint256)
           handler: handleUpdated
       file: ./src/mapping.ts
