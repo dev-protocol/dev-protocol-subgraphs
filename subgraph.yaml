@@ -23,6 +23,8 @@ dataSources:
       abis:
         - name: STokensManager
           file: ./abis/STokensManager.json
+        - name: Lockup
+          file: ./abis/Lockup.json
       eventHandlers:
         # - event: Approval(indexed address,indexed address,indexed uint256)
         #   handler: handleApproval

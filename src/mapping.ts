@@ -5,8 +5,11 @@ import {
   Minted as MintedEvent,
   Transfer as TransferEvent,
   Updated as UpdatedEvent,
-  STokensManager
+  STokensManager,
 } from "../generated/STokensManager/STokensManager"
+import {
+  Lockup
+} from "../generated/STokensManager/Lockup"
 import {
   Approval,
   ApprovalForAll,
@@ -48,11 +51,6 @@ import {
 // }
 
 export function handleMinted(event: MintedEvent): void {
-  let entity = new STokenIdAmount(
-    event.params.tokenId.toString()
-  )
-  entity.amount = event.params.amount
-  entity.save()
   let day = event.block.timestamp.toI32() / 86400
   let totalAmount = TotalAmount.load(day.toString())
   if (totalAmount === null) {
@@ -60,8 +58,12 @@ export function handleMinted(event: MintedEvent): void {
       day.toString()
     )
   }
-  totalAmount.amount = totalAmount.amount.plus(event.params.amount)
-  totalAmount.save()
+  let lockup = Lockup.bind(event.transaction.to!)
+  let getAllValueResult = lockup.try_getAllValue()
+  if (!getAllValueResult.reverted) {
+    totalAmount.amount = getAllValueResult.value
+    totalAmount.save()
+  }
 }
 
 // export function handleTransfer(event: TransferEvent): void {
@@ -75,17 +77,6 @@ export function handleMinted(event: MintedEvent): void {
 // }
 
 export function handleUpdated(event: UpdatedEvent): void {
-  let entity = STokenIdAmount.load(event.params.tokenId.toString())
-  let delta = event.params.amount
-  if (entity === null) {
-    entity = new STokenIdAmount(
-      event.params.tokenId.toString()
-    )
-  } else {
-    delta = delta.minus(entity.amount)
-  }
-  entity.amount = event.params.amount
-  entity.save()
   let day = event.block.timestamp.toI32() / 86400
   let totalAmount = TotalAmount.load(day.toString())
   if (totalAmount === null) {
@@ -93,6 +84,10 @@ export function handleUpdated(event: UpdatedEvent): void {
       day.toString()
     )
   }
-  totalAmount.amount = totalAmount.amount.plus(delta)
-  totalAmount.save()
+  let lockup = Lockup.bind(event.transaction.to!)
+  let getAllValueResult = lockup.try_getAllValue()
+  if (!getAllValueResult.reverted) {
+    totalAmount.amount = getAllValueResult.value
+    totalAmount.save()
+  }
 }
