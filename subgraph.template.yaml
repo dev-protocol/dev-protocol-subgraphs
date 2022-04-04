@@ -26,16 +26,8 @@ dataSources:
         - name: Lockup
           file: ./abis/Lockup.json
       eventHandlers:
-        # - event: Approval(indexed address,indexed address,indexed uint256)
-        #   handler: handleApproval
-        # - event: ApprovalForAll(indexed address,indexed address,bool)
-        #   handler: handleApprovalForAll
-        # - event: Freezed(uint256,address)
-        #   handler: handleFreezed
         - event: Minted(uint256,address,address,uint256,uint256)
           handler: handleMinted
-        # - event: Transfer(indexed address,indexed address,indexed uint256)
-        #   handler: handleTransfer
         - event: Updated(uint256,uint256,uint256,uint256,uint256)
           handler: handleUpdated
       file: ./src/mapping.ts
