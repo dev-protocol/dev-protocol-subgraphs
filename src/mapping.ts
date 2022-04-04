@@ -57,12 +57,12 @@ export function handleMinted(event: MintedEvent): void {
     totalAmount = new TotalAmount(
       day.toString()
     )
-  }
-  let lockup = Lockup.bind(event.transaction.to!)
-  let getAllValueResult = lockup.try_getAllValue()
-  if (!getAllValueResult.reverted) {
-    totalAmount.amount = getAllValueResult.value
-    totalAmount.save()
+    let lockup = Lockup.bind(event.transaction.to!)
+    let getAllValueResult = lockup.try_totalLocked()
+    if (!getAllValueResult.reverted) {
+      totalAmount.amount = getAllValueResult.value
+      totalAmount.save()
+    }
   }
 }
 
@@ -83,11 +83,11 @@ export function handleUpdated(event: UpdatedEvent): void {
     totalAmount = new TotalAmount(
       day.toString()
     )
-  }
-  let lockup = Lockup.bind(event.transaction.to!)
-  let getAllValueResult = lockup.try_getAllValue()
-  if (!getAllValueResult.reverted) {
-    totalAmount.amount = getAllValueResult.value
-    totalAmount.save()
+    let lockup = Lockup.bind(event.transaction.to!)
+    let getAllValueResult = lockup.try_totalLocked()
+    if (!getAllValueResult.reverted) {
+      totalAmount.amount = getAllValueResult.value
+      totalAmount.save()
+    }
   }
 }

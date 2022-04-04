@@ -34,27 +34,9 @@ export class Lockedup__Params {
   get _value(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
-}
 
-export class OwnershipTransferred extends ethereum.Event {
-  get params(): OwnershipTransferred__Params {
-    return new OwnershipTransferred__Params(this);
-  }
-}
-
-export class OwnershipTransferred__Params {
-  _event: OwnershipTransferred;
-
-  constructor(event: OwnershipTransferred) {
-    this._event = event;
-  }
-
-  get previousOwner(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get newOwner(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get _tokenId(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
   }
 }
 
@@ -73,6 +55,40 @@ export class UpdateCap__Params {
 
   get _cap(): BigInt {
     return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class Withdrew extends ethereum.Event {
+  get params(): Withdrew__Params {
+    return new Withdrew__Params(this);
+  }
+}
+
+export class Withdrew__Params {
+  _event: Withdrew;
+
+  constructor(event: Withdrew) {
+    this._event = event;
+  }
+
+  get _from(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get _property(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get _value(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get _reward(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get _tokenId(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -116,51 +132,19 @@ export class Lockup__calculateRewardAmountResult {
   }
 }
 
-export class Lockup__getStorageLastSameRewardsAmountAndBlockResult {
-  value0: BigInt;
-  value1: BigInt;
-
-  constructor(value0: BigInt, value1: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
+export class Lockup__getLockedupPropertiesResultValue0Struct extends ethereum.Tuple {
+  get property(): Address {
+    return this[0].toAddress();
   }
 
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    return map;
+  get value(): BigInt {
+    return this[1].toBigInt();
   }
 }
 
 export class Lockup extends ethereum.SmartContract {
   static bind(address: Address): Lockup {
     return new Lockup("Lockup", address);
-  }
-
-  calculateCumulativeHoldersRewardAmount(_property: Address): BigInt {
-    let result = super.call(
-      "calculateCumulativeHoldersRewardAmount",
-      "calculateCumulativeHoldersRewardAmount(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_calculateCumulativeHoldersRewardAmount(
-    _property: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "calculateCumulativeHoldersRewardAmount",
-      "calculateCumulativeHoldersRewardAmount(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   calculateCumulativeRewardPrices(): Lockup__calculateCumulativeRewardPricesResult {
@@ -235,35 +219,6 @@ export class Lockup extends ethereum.SmartContract {
     );
   }
 
-  calculateWithdrawableInterestAmount(
-    _property: Address,
-    _user: Address
-  ): BigInt {
-    let result = super.call(
-      "calculateWithdrawableInterestAmount",
-      "calculateWithdrawableInterestAmount(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_calculateWithdrawableInterestAmount(
-    _property: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "calculateWithdrawableInterestAmount",
-      "calculateWithdrawableInterestAmount(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   calculateWithdrawableInterestAmountByPosition(_tokenId: BigInt): BigInt {
     let result = super.call(
       "calculateWithdrawableInterestAmountByPosition",
@@ -304,23 +259,50 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  configAddress(): Address {
-    let result = super.call("configAddress", "configAddress():(address)", []);
+  cumulativeGlobalReward(): BigInt {
+    let result = super.call(
+      "cumulativeGlobalReward",
+      "cumulativeGlobalReward():(uint256)",
+      []
+    );
 
-    return result[0].toAddress();
+    return result[0].toBigInt();
   }
 
-  try_configAddress(): ethereum.CallResult<Address> {
+  try_cumulativeGlobalReward(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "configAddress",
-      "configAddress():(address)",
+      "cumulativeGlobalReward",
+      "cumulativeGlobalReward():(uint256)",
       []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  cumulativeHoldersRewardCap(): BigInt {
+    let result = super.call(
+      "cumulativeHoldersRewardCap",
+      "cumulativeHoldersRewardCap():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_cumulativeHoldersRewardCap(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "cumulativeHoldersRewardCap",
+      "cumulativeHoldersRewardCap():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   depositToPosition(_tokenId: BigInt, _amount: BigInt): boolean {
@@ -387,436 +369,26 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  devMinter(): Address {
-    let result = super.call("devMinter", "devMinter():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_devMinter(): ethereum.CallResult<Address> {
-    let result = super.tryCall("devMinter", "devMinter():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getAllValue(): BigInt {
-    let result = super.call("getAllValue", "getAllValue():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_getAllValue(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("getAllValue", "getAllValue():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getPropertyValue(_property: Address): BigInt {
+  getLockedupProperties(): Array<
+    Lockup__getLockedupPropertiesResultValue0Struct
+  > {
     let result = super.call(
-      "getPropertyValue",
-      "getPropertyValue(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getPropertyValue(_property: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getPropertyValue",
-      "getPropertyValue(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageAddress(): Address {
-    let result = super.call(
-      "getStorageAddress",
-      "getStorageAddress():(address)",
+      "getLockedupProperties",
+      "getLockedupProperties():((address,uint256)[])",
       []
     );
 
-    return result[0].toAddress();
+    return result[0].toTupleArray<
+      Lockup__getLockedupPropertiesResultValue0Struct
+    >();
   }
 
-  try_getStorageAddress(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getStorageAddress",
-      "getStorageAddress():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getStorageAllValue(): BigInt {
-    let result = super.call(
-      "getStorageAllValue",
-      "getStorageAllValue():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageAllValue(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageAllValue",
-      "getStorageAllValue():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageCap(): BigInt {
-    let result = super.call("getStorageCap", "getStorageCap():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageCap(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageCap",
-      "getStorageCap():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageCumulativeGlobalRewards(): BigInt {
-    let result = super.call(
-      "getStorageCumulativeGlobalRewards",
-      "getStorageCumulativeGlobalRewards():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageCumulativeGlobalRewards(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageCumulativeGlobalRewards",
-      "getStorageCumulativeGlobalRewards():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageCumulativeHoldersRewardCap(): BigInt {
-    let result = super.call(
-      "getStorageCumulativeHoldersRewardCap",
-      "getStorageCumulativeHoldersRewardCap():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageCumulativeHoldersRewardCap(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageCumulativeHoldersRewardCap",
-      "getStorageCumulativeHoldersRewardCap():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageDIP4GenesisBlock(): BigInt {
-    let result = super.call(
-      "getStorageDIP4GenesisBlock",
-      "getStorageDIP4GenesisBlock():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageDIP4GenesisBlock(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageDIP4GenesisBlock",
-      "getStorageDIP4GenesisBlock():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageFallbackInitialCumulativeHoldersRewardCap(): BigInt {
-    let result = super.call(
-      "getStorageFallbackInitialCumulativeHoldersRewardCap",
-      "getStorageFallbackInitialCumulativeHoldersRewardCap():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageFallbackInitialCumulativeHoldersRewardCap(): ethereum.CallResult<
-    BigInt
+  try_getLockedupProperties(): ethereum.CallResult<
+    Array<Lockup__getLockedupPropertiesResultValue0Struct>
   > {
     let result = super.tryCall(
-      "getStorageFallbackInitialCumulativeHoldersRewardCap",
-      "getStorageFallbackInitialCumulativeHoldersRewardCap():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageInitialCumulativeHoldersRewardCap(_property: Address): BigInt {
-    let result = super.call(
-      "getStorageInitialCumulativeHoldersRewardCap",
-      "getStorageInitialCumulativeHoldersRewardCap(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageInitialCumulativeHoldersRewardCap(
-    _property: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageInitialCumulativeHoldersRewardCap",
-      "getStorageInitialCumulativeHoldersRewardCap(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageInterestPrice(_property: Address): BigInt {
-    let result = super.call(
-      "getStorageInterestPrice",
-      "getStorageInterestPrice(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageInterestPrice(_property: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageInterestPrice",
-      "getStorageInterestPrice(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageLastCumulativeHoldersPriceCap(): BigInt {
-    let result = super.call(
-      "getStorageLastCumulativeHoldersPriceCap",
-      "getStorageLastCumulativeHoldersPriceCap():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageLastCumulativeHoldersPriceCap(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageLastCumulativeHoldersPriceCap",
-      "getStorageLastCumulativeHoldersPriceCap():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageLastCumulativeHoldersRewardAmountPerProperty(
-    _property: Address
-  ): BigInt {
-    let result = super.call(
-      "getStorageLastCumulativeHoldersRewardAmountPerProperty",
-      "getStorageLastCumulativeHoldersRewardAmountPerProperty(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageLastCumulativeHoldersRewardAmountPerProperty(
-    _property: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageLastCumulativeHoldersRewardAmountPerProperty",
-      "getStorageLastCumulativeHoldersRewardAmountPerProperty(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageLastCumulativeHoldersRewardPrice(): BigInt {
-    let result = super.call(
-      "getStorageLastCumulativeHoldersRewardPrice",
-      "getStorageLastCumulativeHoldersRewardPrice():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageLastCumulativeHoldersRewardPrice(): ethereum.CallResult<
-    BigInt
-  > {
-    let result = super.tryCall(
-      "getStorageLastCumulativeHoldersRewardPrice",
-      "getStorageLastCumulativeHoldersRewardPrice():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageLastCumulativeHoldersRewardPricePerProperty(
-    _property: Address
-  ): BigInt {
-    let result = super.call(
-      "getStorageLastCumulativeHoldersRewardPricePerProperty",
-      "getStorageLastCumulativeHoldersRewardPricePerProperty(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageLastCumulativeHoldersRewardPricePerProperty(
-    _property: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageLastCumulativeHoldersRewardPricePerProperty",
-      "getStorageLastCumulativeHoldersRewardPricePerProperty(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageLastCumulativeInterestPrice(): BigInt {
-    let result = super.call(
-      "getStorageLastCumulativeInterestPrice",
-      "getStorageLastCumulativeInterestPrice():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageLastCumulativeInterestPrice(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageLastCumulativeInterestPrice",
-      "getStorageLastCumulativeInterestPrice():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageLastInterestPrice(_property: Address, _user: Address): BigInt {
-    let result = super.call(
-      "getStorageLastInterestPrice",
-      "getStorageLastInterestPrice(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getStorageLastInterestPrice(
-    _property: Address,
-    _user: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getStorageLastInterestPrice",
-      "getStorageLastInterestPrice(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getStorageLastSameRewardsAmountAndBlock(): Lockup__getStorageLastSameRewardsAmountAndBlockResult {
-    let result = super.call(
-      "getStorageLastSameRewardsAmountAndBlock",
-      "getStorageLastSameRewardsAmountAndBlock():(uint256,uint256)",
-      []
-    );
-
-    return new Lockup__getStorageLastSameRewardsAmountAndBlockResult(
-      result[0].toBigInt(),
-      result[1].toBigInt()
-    );
-  }
-
-  try_getStorageLastSameRewardsAmountAndBlock(): ethereum.CallResult<
-    Lockup__getStorageLastSameRewardsAmountAndBlockResult
-  > {
-    let result = super.tryCall(
-      "getStorageLastSameRewardsAmountAndBlock",
-      "getStorageLastSameRewardsAmountAndBlock():(uint256,uint256)",
+      "getLockedupProperties",
+      "getLockedupProperties():((address,uint256)[])",
       []
     );
     if (result.reverted) {
@@ -824,34 +396,27 @@ export class Lockup extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Lockup__getStorageLastSameRewardsAmountAndBlockResult(
-        value[0].toBigInt(),
-        value[1].toBigInt()
-      )
+      value[0].toTupleArray<Lockup__getLockedupPropertiesResultValue0Struct>()
     );
   }
 
-  getStorageLastStakedInterestPrice(
-    _property: Address,
-    _user: Address
-  ): BigInt {
+  initialCumulativeHoldersRewardCap(param0: Address): BigInt {
     let result = super.call(
-      "getStorageLastStakedInterestPrice",
-      "getStorageLastStakedInterestPrice(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
+      "initialCumulativeHoldersRewardCap",
+      "initialCumulativeHoldersRewardCap(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getStorageLastStakedInterestPrice(
-    _property: Address,
-    _user: Address
+  try_initialCumulativeHoldersRewardCap(
+    param0: Address
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getStorageLastStakedInterestPrice",
-      "getStorageLastStakedInterestPrice(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
+      "initialCumulativeHoldersRewardCap",
+      "initialCumulativeHoldersRewardCap(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -860,22 +425,20 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getStorageLastStakesChangedCumulativeReward(): BigInt {
+  lastCumulativeHoldersPriceCap(): BigInt {
     let result = super.call(
-      "getStorageLastStakesChangedCumulativeReward",
-      "getStorageLastStakesChangedCumulativeReward():(uint256)",
+      "lastCumulativeHoldersPriceCap",
+      "lastCumulativeHoldersPriceCap():(uint256)",
       []
     );
 
     return result[0].toBigInt();
   }
 
-  try_getStorageLastStakesChangedCumulativeReward(): ethereum.CallResult<
-    BigInt
-  > {
+  try_lastCumulativeHoldersPriceCap(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getStorageLastStakesChangedCumulativeReward",
-      "getStorageLastStakesChangedCumulativeReward():(uint256)",
+      "lastCumulativeHoldersPriceCap",
+      "lastCumulativeHoldersPriceCap():(uint256)",
       []
     );
     if (result.reverted) {
@@ -885,27 +448,23 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getStoragePendingInterestWithdrawal(
-    _property: Address,
-    _user: Address
-  ): BigInt {
+  lastCumulativeHoldersRewardAmountPerProperty(param0: Address): BigInt {
     let result = super.call(
-      "getStoragePendingInterestWithdrawal",
-      "getStoragePendingInterestWithdrawal(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
+      "lastCumulativeHoldersRewardAmountPerProperty",
+      "lastCumulativeHoldersRewardAmountPerProperty(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getStoragePendingInterestWithdrawal(
-    _property: Address,
-    _user: Address
+  try_lastCumulativeHoldersRewardAmountPerProperty(
+    param0: Address
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getStoragePendingInterestWithdrawal",
-      "getStoragePendingInterestWithdrawal(address,address):(uint256)",
-      [ethereum.Value.fromAddress(_property), ethereum.Value.fromAddress(_user)]
+      "lastCumulativeHoldersRewardAmountPerProperty",
+      "lastCumulativeHoldersRewardAmountPerProperty(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -914,21 +473,21 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getStoragePropertyValue(_property: Address): BigInt {
+  lastCumulativeHoldersRewardPrice(): BigInt {
     let result = super.call(
-      "getStoragePropertyValue",
-      "getStoragePropertyValue(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
+      "lastCumulativeHoldersRewardPrice",
+      "lastCumulativeHoldersRewardPrice():(uint256)",
+      []
     );
 
     return result[0].toBigInt();
   }
 
-  try_getStoragePropertyValue(_property: Address): ethereum.CallResult<BigInt> {
+  try_lastCumulativeHoldersRewardPrice(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getStoragePropertyValue",
-      "getStoragePropertyValue(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
+      "lastCumulativeHoldersRewardPrice",
+      "lastCumulativeHoldersRewardPrice():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -937,30 +496,23 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getStorageValue(_property: Address, _sender: Address): BigInt {
+  lastCumulativeHoldersRewardPricePerProperty(param0: Address): BigInt {
     let result = super.call(
-      "getStorageValue",
-      "getStorageValue(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_property),
-        ethereum.Value.fromAddress(_sender)
-      ]
+      "lastCumulativeHoldersRewardPricePerProperty",
+      "lastCumulativeHoldersRewardPricePerProperty(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getStorageValue(
-    _property: Address,
-    _sender: Address
+  try_lastCumulativeHoldersRewardPricePerProperty(
+    param0: Address
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getStorageValue",
-      "getStorageValue(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_property),
-        ethereum.Value.fromAddress(_sender)
-      ]
+      "lastCumulativeHoldersRewardPricePerProperty",
+      "lastCumulativeHoldersRewardPricePerProperty(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -969,64 +521,21 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getValue(_property: Address, _sender: Address): BigInt {
-    let result = super.call("getValue", "getValue(address,address):(uint256)", [
-      ethereum.Value.fromAddress(_property),
-      ethereum.Value.fromAddress(_sender)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_getValue(
-    _property: Address,
-    _sender: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getValue",
-      "getValue(address,address):(uint256)",
-      [
-        ethereum.Value.fromAddress(_property),
-        ethereum.Value.fromAddress(_sender)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  isOwner(): boolean {
-    let result = super.call("isOwner", "isOwner():(bool)", []);
-
-    return result[0].toBoolean();
-  }
-
-  try_isOwner(): ethereum.CallResult<boolean> {
-    let result = super.tryCall("isOwner", "isOwner():(bool)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  migrateToSTokens(_property: Address): BigInt {
+  lastCumulativeRewardPrice(): BigInt {
     let result = super.call(
-      "migrateToSTokens",
-      "migrateToSTokens(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
+      "lastCumulativeRewardPrice",
+      "lastCumulativeRewardPrice():(uint256)",
+      []
     );
 
     return result[0].toBigInt();
   }
 
-  try_migrateToSTokens(_property: Address): ethereum.CallResult<BigInt> {
+  try_lastCumulativeRewardPrice(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "migrateToSTokens",
-      "migrateToSTokens(address):(uint256)",
-      [ethereum.Value.fromAddress(_property)]
+      "lastCumulativeRewardPrice",
+      "lastCumulativeRewardPrice():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1035,14 +544,91 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  owner(): Address {
-    let result = super.call("owner", "owner():(address)", []);
+  lastLockedChangedCumulativeReward(): BigInt {
+    let result = super.call(
+      "lastLockedChangedCumulativeReward",
+      "lastLockedChangedCumulativeReward():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_lastLockedChangedCumulativeReward(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "lastLockedChangedCumulativeReward",
+      "lastLockedChangedCumulativeReward():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  lastSameGlobalRewardAmount(): BigInt {
+    let result = super.call(
+      "lastSameGlobalRewardAmount",
+      "lastSameGlobalRewardAmount():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_lastSameGlobalRewardAmount(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "lastSameGlobalRewardAmount",
+      "lastSameGlobalRewardAmount():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  lastSameGlobalRewardTimestamp(): BigInt {
+    let result = super.call(
+      "lastSameGlobalRewardTimestamp",
+      "lastSameGlobalRewardTimestamp():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_lastSameGlobalRewardTimestamp(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "lastSameGlobalRewardTimestamp",
+      "lastSameGlobalRewardTimestamp():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  registryAddress(): Address {
+    let result = super.call(
+      "registryAddress",
+      "registryAddress():(address)",
+      []
+    );
 
     return result[0].toAddress();
   }
 
-  try_owner(): ethereum.CallResult<Address> {
-    let result = super.tryCall("owner", "owner():(address)", []);
+  try_registryAddress(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "registryAddress",
+      "registryAddress():(address)",
+      []
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1050,23 +636,42 @@ export class Lockup extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  sTokensManager(): Address {
-    let result = super.call("sTokensManager", "sTokensManager():(address)", []);
+  totalLocked(): BigInt {
+    let result = super.call("totalLocked", "totalLocked():(uint256)", []);
 
-    return result[0].toAddress();
+    return result[0].toBigInt();
   }
 
-  try_sTokensManager(): ethereum.CallResult<Address> {
+  try_totalLocked(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("totalLocked", "totalLocked():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  totalLockedForProperty(param0: Address): BigInt {
+    let result = super.call(
+      "totalLockedForProperty",
+      "totalLockedForProperty(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_totalLockedForProperty(param0: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "sTokensManager",
-      "sTokensManager():(address)",
-      []
+      "totalLockedForProperty",
+      "totalLockedForProperty(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   withdrawByPosition(_tokenId: BigInt, _amount: BigInt): boolean {
@@ -1099,134 +704,6 @@ export class Lockup extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-}
-
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
-  }
-
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
-  }
-}
-
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-
-  get _config(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _devMinter(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _sTokensManager(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-}
-
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-}
-
-export class ___setFallbackInitialCumulativeHoldersRewardCapCall extends ethereum.Call {
-  get inputs(): ___setFallbackInitialCumulativeHoldersRewardCapCall__Inputs {
-    return new ___setFallbackInitialCumulativeHoldersRewardCapCall__Inputs(
-      this
-    );
-  }
-
-  get outputs(): ___setFallbackInitialCumulativeHoldersRewardCapCall__Outputs {
-    return new ___setFallbackInitialCumulativeHoldersRewardCapCall__Outputs(
-      this
-    );
-  }
-}
-
-export class ___setFallbackInitialCumulativeHoldersRewardCapCall__Inputs {
-  _call: ___setFallbackInitialCumulativeHoldersRewardCapCall;
-
-  constructor(call: ___setFallbackInitialCumulativeHoldersRewardCapCall) {
-    this._call = call;
-  }
-
-  get _value(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class ___setFallbackInitialCumulativeHoldersRewardCapCall__Outputs {
-  _call: ___setFallbackInitialCumulativeHoldersRewardCapCall;
-
-  constructor(call: ___setFallbackInitialCumulativeHoldersRewardCapCall) {
-    this._call = call;
-  }
-}
-
-export class ChangeOwnerCall extends ethereum.Call {
-  get inputs(): ChangeOwnerCall__Inputs {
-    return new ChangeOwnerCall__Inputs(this);
-  }
-
-  get outputs(): ChangeOwnerCall__Outputs {
-    return new ChangeOwnerCall__Outputs(this);
-  }
-}
-
-export class ChangeOwnerCall__Inputs {
-  _call: ChangeOwnerCall;
-
-  constructor(call: ChangeOwnerCall) {
-    this._call = call;
-  }
-
-  get newOwner(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class ChangeOwnerCall__Outputs {
-  _call: ChangeOwnerCall;
-
-  constructor(call: ChangeOwnerCall) {
-    this._call = call;
-  }
-}
-
-export class CreateStorageCall extends ethereum.Call {
-  get inputs(): CreateStorageCall__Inputs {
-    return new CreateStorageCall__Inputs(this);
-  }
-
-  get outputs(): CreateStorageCall__Outputs {
-    return new CreateStorageCall__Outputs(this);
-  }
-}
-
-export class CreateStorageCall__Inputs {
-  _call: CreateStorageCall;
-
-  constructor(call: CreateStorageCall) {
-    this._call = call;
-  }
-}
-
-export class CreateStorageCall__Outputs {
-  _call: CreateStorageCall;
-
-  constructor(call: CreateStorageCall) {
-    this._call = call;
   }
 }
 
@@ -1306,160 +783,32 @@ export class DepositToPropertyCall__Outputs {
   }
 }
 
-export class LockupCall extends ethereum.Call {
-  get inputs(): LockupCall__Inputs {
-    return new LockupCall__Inputs(this);
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
   }
 
-  get outputs(): LockupCall__Outputs {
-    return new LockupCall__Outputs(this);
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
   }
 }
 
-export class LockupCall__Inputs {
-  _call: LockupCall;
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
 
-  constructor(call: LockupCall) {
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 
-  get _from(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _property(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _value(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class LockupCall__Outputs {
-  _call: LockupCall;
-
-  constructor(call: LockupCall) {
-    this._call = call;
-  }
-}
-
-export class MigrateToSTokensCall extends ethereum.Call {
-  get inputs(): MigrateToSTokensCall__Inputs {
-    return new MigrateToSTokensCall__Inputs(this);
-  }
-
-  get outputs(): MigrateToSTokensCall__Outputs {
-    return new MigrateToSTokensCall__Outputs(this);
-  }
-}
-
-export class MigrateToSTokensCall__Inputs {
-  _call: MigrateToSTokensCall;
-
-  constructor(call: MigrateToSTokensCall) {
-    this._call = call;
-  }
-
-  get _property(): Address {
+  get _registry(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
 
-export class MigrateToSTokensCall__Outputs {
-  _call: MigrateToSTokensCall;
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
 
-  constructor(call: MigrateToSTokensCall) {
-    this._call = call;
-  }
-
-  get tokenId_(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class RenounceOwnershipCall extends ethereum.Call {
-  get inputs(): RenounceOwnershipCall__Inputs {
-    return new RenounceOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): RenounceOwnershipCall__Outputs {
-    return new RenounceOwnershipCall__Outputs(this);
-  }
-}
-
-export class RenounceOwnershipCall__Inputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceOwnershipCall__Outputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class SetStorageCall extends ethereum.Call {
-  get inputs(): SetStorageCall__Inputs {
-    return new SetStorageCall__Inputs(this);
-  }
-
-  get outputs(): SetStorageCall__Outputs {
-    return new SetStorageCall__Outputs(this);
-  }
-}
-
-export class SetStorageCall__Inputs {
-  _call: SetStorageCall;
-
-  constructor(call: SetStorageCall) {
-    this._call = call;
-  }
-
-  get _storageAddress(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class SetStorageCall__Outputs {
-  _call: SetStorageCall;
-
-  constructor(call: SetStorageCall) {
-    this._call = call;
-  }
-}
-
-export class TransferOwnershipCall extends ethereum.Call {
-  get inputs(): TransferOwnershipCall__Inputs {
-    return new TransferOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): TransferOwnershipCall__Outputs {
-    return new TransferOwnershipCall__Outputs(this);
-  }
-}
-
-export class TransferOwnershipCall__Inputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-
-  get newOwner(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class TransferOwnershipCall__Outputs {
-  _call: TransferOwnershipCall;
-
-  constructor(call: TransferOwnershipCall) {
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 }
@@ -1516,40 +865,6 @@ export class UpdateCapCall__Outputs {
   _call: UpdateCapCall;
 
   constructor(call: UpdateCapCall) {
-    this._call = call;
-  }
-}
-
-export class WithdrawCall extends ethereum.Call {
-  get inputs(): WithdrawCall__Inputs {
-    return new WithdrawCall__Inputs(this);
-  }
-
-  get outputs(): WithdrawCall__Outputs {
-    return new WithdrawCall__Outputs(this);
-  }
-}
-
-export class WithdrawCall__Inputs {
-  _call: WithdrawCall;
-
-  constructor(call: WithdrawCall) {
-    this._call = call;
-  }
-
-  get _property(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class WithdrawCall__Outputs {
-  _call: WithdrawCall;
-
-  constructor(call: WithdrawCall) {
     this._call = call;
   }
 }
