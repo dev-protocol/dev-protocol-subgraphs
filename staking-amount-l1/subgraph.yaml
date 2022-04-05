@@ -1,0 +1,26 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: DevToken
+    network: mainnet
+    source:
+      address: "0x5cAf454Ba92e6F2c929DF14667Ee360eD9fD5b26"
+      abi: DevToken
+      startBlock: 14461492
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: DevToken
+          file: ./abis/DevToken.json
+        - name: EternalStorage
+          file: ./abis/EternalStorage.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mapping.ts
