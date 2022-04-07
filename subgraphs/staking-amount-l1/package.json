@@ -1,0 +1,12 @@
+{
+  "name": "staking-amount-l1",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ dev-protocol/staking-amount-l1",
+    "create-local": "graph create --node http://localhost:8020/ dev-protocol/staking-amount-l1",
+    "remove-local": "graph remove --node http://localhost:8020/ dev-protocol/staking-amount-l1",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 dev-protocol/staking-amount-l1"
+  }
+}
