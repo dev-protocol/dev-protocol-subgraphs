@@ -11,8 +11,13 @@ import {
   Lockup
 } from "../generated/STokensManager/Lockup"
 import {
-  PropertyCount,
+  DevToken,
+  Transfer as TransferEvent
+} from "../generated/DevToken/DevToken"
+import {
   TotalAmount,
+  PropertyCount,
+  TotalSupply
 } from "../generated/schema"
 
 export function handleMinted(event: MintedEvent): void {
@@ -71,4 +76,17 @@ export function handleDestroy(event: DestroyEvent): void {
   let metricsFactory = MetricsFactory.bind(event.address);
   propertyCount.count = metricsFactory.metricsCount()
   propertyCount.save()
+}
+
+export function handleTransfer(event: TransferEvent): void {
+  let day = event.block.timestamp.toI32() / 86400
+  let totalSupply = TotalSupply.load(day.toString())
+  if (totalSupply === null) {
+    totalSupply = new TotalSupply(
+      day.toString()
+    )
+  }
+  let devToken = DevToken.bind(event.address);
+  totalSupply.amount = devToken.totalSupply()
+  totalSupply.save()
 }

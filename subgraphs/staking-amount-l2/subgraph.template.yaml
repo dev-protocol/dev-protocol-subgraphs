@@ -58,4 +58,28 @@ dataSources:
         - event: Destroy(indexed address,indexed address,address)
           handler: handleDestroy
       file: ./src/mapping.ts
-
+  - kind: ethereum
+    name: DevToken
+    network: {{network}}
+    source:
+      address: '{{dev-token-address}}'
+      abi: DevToken
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - Freezed
+        - Minted
+        - Transfer
+        - Updated
+      abis:
+        - name: DevToken
+          file: ./abis/DevToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mapping.ts

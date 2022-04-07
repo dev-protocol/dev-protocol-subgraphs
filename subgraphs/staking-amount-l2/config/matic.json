@@ -2,5 +2,6 @@
   "network": "matic",
   "address": "0x89904De861CDEd2567695271A511B3556659FfA2",
   "metrics-factory-address": "0xD18f2eB75cE3a6A35586115b2f2c63d907536CDE",
+  "dev-token-address": "0xA5577D1cec2583058A6Bd6d5DEAC44797c205701",
   "startBlock":  23520283
 }
