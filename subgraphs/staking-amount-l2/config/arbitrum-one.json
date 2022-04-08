@@ -1,5 +1,7 @@
 {
   "network": "arbitrum-one",
   "address": "0x40d999931f7055F670511860e24624939e71a96a",
+  "metrics-factory-address": "0xEdCF7765B7Be6415D02173e4645604bB1A377929",
+  "dev-token-address": "0x91F5dC90979b058eBA3be6B7B7e523df7e84e137",
   "startBlock":  2755321
 }
