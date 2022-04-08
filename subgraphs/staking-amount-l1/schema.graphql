@@ -2,3 +2,13 @@ type TotalAmount @entity {
   id: ID! #day
   amount: BigInt! #staking amount
 }
+
+type PropertyCount @entity {
+  id: ID! #day
+  count: BigInt! #staking amount
+}
+
+type TotalSupply @entity {
+  id: ID! #day
+  amount: BigInt! #total supply
+}
