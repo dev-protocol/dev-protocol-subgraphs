@@ -1,0 +1,16 @@
+{
+  "name": "number-of-creator-tokens-l1",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ number-of-creator-tokens-l1",
+    "create-local": "graph create --node http://localhost:8020/ number-of-creator-tokens-l1",
+    "remove-local": "graph remove --node http://localhost:8020/ number-of-creator-tokens-l1",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 number-of-creator-tokens-l1"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.29.0",
+    "@graphprotocol/graph-ts": "0.26.0"
+  }
+}

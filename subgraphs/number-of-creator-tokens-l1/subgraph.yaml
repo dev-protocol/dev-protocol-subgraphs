@@ -1,0 +1,32 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: PropertyFactory
+    network: mainnet
+    source:
+      address: "0x9dFd67bF97dc48AcDFBF75aD814e158816F98B0B"
+      abi: PropertyFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ChangeAuthor
+        - ChangeName
+        - ChangeSymbol
+        - CreateExample
+      abis:
+        - name: PropertyFactory
+          file: ./abis/PropertyFactory.json
+      eventHandlers:
+        - event: ChangeAuthor(indexed address,address,address)
+          handler: handleChangeAuthor
+        - event: ChangeName(indexed address,string,string)
+          handler: handleChangeName
+        - event: ChangeSymbol(indexed address,string,string)
+          handler: handleChangeSymbol
+        - event: Create(indexed address,address)
+          handler: handleCreate
+      file: ./src/mapping.ts

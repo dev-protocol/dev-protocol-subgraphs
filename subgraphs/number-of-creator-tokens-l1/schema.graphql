@@ -1,0 +1,5 @@
+type CreateExample @entity {
+  id: ID!
+  _from: Bytes! #address
+  _property: Bytes! # address
+}
