@@ -2,7 +2,6 @@
   "name": "@dev-protocol/subgraphs",
   "private": true,
   "workspaces": [
-    "packages/*",
     "subgraphs/*"
   ],
   "scripts": {
