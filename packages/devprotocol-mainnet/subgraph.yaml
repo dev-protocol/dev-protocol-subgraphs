@@ -26,3 +26,143 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/mapping.ts
+
+  - kind: ethereum
+    name: MetricsFactory_1
+    network: mainnet
+    source:
+      address: "0xaF490bA3EaFf9495f01407EC22027bD90eaFABb1"
+      abi: MetricsFactory
+      startBlock: 9389518
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: MetricsFactory
+          file: ../abis/v1/MetricsFactory.json
+        - name: MetricsGroup
+          file: ../abis/v1/MetricsGroup.json
+        - name: EternalStorage
+          file: ../abis/v1/EternalStorage.json
+      eventHandlers:
+        - event: Create(indexed address,address)
+          handler: handleMetricsChanged
+        - event: Destroy(indexed address,address)
+          handler: handleMetricsChanged
+      file: ./src/mapping.ts
+
+  - kind: ethereum
+    name: MetricsFactory_2
+    network: mainnet
+    source:
+      address: "0xC6eDBd2bcD3dD5f13b9AFA578458A37A42a53040"
+      abi: MetricsFactory
+      startBlock: 9732819
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: MetricsFactory
+          file: ../abis/v1/MetricsFactory.json
+        - name: MetricsGroup
+          file: ../abis/v1/MetricsGroup.json
+        - name: EternalStorage
+          file: ../abis/v1/EternalStorage.json
+      eventHandlers:
+        - event: Create(indexed address,address)
+          handler: handleMetricsChanged
+        - event: Destroy(indexed address,address)
+          handler: handleMetricsChanged
+      file: ./src/mapping.ts
+
+  - kind: ethereum
+    name: MetricsFactory_3
+    network: mainnet
+    source:
+      address: "0x0C17FdA052F0D0F1530FcECb71525eF607a4d1E2"
+      abi: MetricsFactory
+      startBlock: 9822848
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: MetricsFactory
+          file: ../abis/v1/MetricsFactory.json
+        - name: MetricsGroup
+          file: ../abis/v1/MetricsGroup.json
+        - name: EternalStorage
+          file: ../abis/v1/EternalStorage.json
+      eventHandlers:
+        - event: Create(indexed address,address)
+          handler: handleMetricsChanged
+        - event: Destroy(indexed address,address)
+          handler: handleMetricsChanged
+      file: ./src/mapping.ts
+
+  - kind: ethereum
+    name: MetricsFactory_4
+    network: mainnet
+    source:
+      address: "0x45c971eAB8941bA06E9F9E2E1D6C040A89225600"
+      abi: MetricsFactory
+      startBlock: 10474843
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: MetricsFactory
+          file: ../abis/v1/MetricsFactory.json
+        - name: MetricsGroup
+          file: ../abis/v1/MetricsGroup.json
+        - name: EternalStorage
+          file: ../abis/v1/EternalStorage.json
+      eventHandlers:
+        - event: Create(indexed address,address)
+          handler: handleMetricsChanged
+        - event: Destroy(indexed address,address)
+          handler: handleMetricsChanged
+      file: ./src/mapping.ts
+
+  - kind: ethereum
+    name: MetricsFactory_5
+    network: mainnet
+    source:
+      address: "0xb6eb37095aE1a28Aa320B9a9730f8cDE8000F6d2"
+      abi: MetricsFactory
+      startBlock: 10695107
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: MetricsFactory
+          file: ../abis/v1/MetricsFactory.json
+        - name: MetricsGroup
+          file: ../abis/v1/MetricsGroup.json
+        - name: EternalStorage
+          file: ../abis/v1/EternalStorage.json
+      eventHandlers:
+        - event: Create(indexed address,address)
+          handler: handleMetricsChanged
+        - event: Destroy(indexed address,address)
+          handler: handleMetricsChanged
+      file: ./src/mapping.ts
+
+
+
+
+
