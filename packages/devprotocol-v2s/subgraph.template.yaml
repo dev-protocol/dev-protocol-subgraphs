@@ -1,0 +1,33 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: STokensManager
+    network: {{network}}
+    source:
+      address: '{{address}}'
+      abi: STokensManager
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - Freezed
+        - Minted
+        - Transfer
+        - Updated
+      abis:
+        - name: STokensManager
+          file: ../abis/common/STokensManager.json
+        - name: Lockup
+          file: ../abis/v2/Lockup.json
+      eventHandlers:
+        - event: Minted(uint256,address,address,uint256,uint256)
+          handler: handleMinted
+        - event: Updated(uint256,uint256,uint256,uint256,uint256)
+          handler: handleUpdated
+      file: ./src/mapping.ts

@@ -19,9 +19,9 @@ dataSources:
         - Transfer
       abis:
         - name: DevToken
-          file: ./abis/DevToken.json
+          file: ../abis/common/DevToken.json
         - name: EternalStorage
-          file: ./abis/EternalStorage.json
+          file: ../abis/v1/EternalStorage.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer

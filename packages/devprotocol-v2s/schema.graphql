@@ -1,4 +1,4 @@
-type TotalLocked @entity {
+type TotalLockedAmount @entity {
   id: ID! #day
   amount: BigInt! #staking amount
 }
