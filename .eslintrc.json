@@ -1,0 +1,10 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.json",
+		"tsconfigRootDir": "."
+	},
+	"env": { "mocha": true },
+	"plugins": ["@typescript-eslint"],
+	"extends": ["xo", "xo-typescript", "prettier"]
+}

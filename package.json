@@ -1,16 +1,29 @@
 {
-  "name": "@dev-protocol/subgraphs",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "yarn workspaces run build",
-    "codegen": "yarn workspaces run codegen"
-  },
-  "devDependencies": {
-    "@graphprotocol/graph-cli": "0.30.4",
-    "@graphprotocol/graph-ts": "0.27.0",
-    "mustache": "4.2.0"
-  }
+	"name": "@dev-protocol/subgraphs",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"build": "yarn workspaces run build",
+		"codegen": "yarn workspaces run codegen",
+		"lint": "yarn lint:eslint && yarn lint:format",
+		"lint:eslint": "eslint . --ext .ts,.js --fix",
+		"lint:format": "prettier --write '**/*.{sol,ts,js,json,md,yml}'",
+		"prepare": "husky install"
+	},
+	"devDependencies": {
+		"@graphprotocol/graph-cli": "0.30.4",
+		"@graphprotocol/graph-ts": "0.27.0",
+		"@typescript-eslint/eslint-plugin": "^5.27.1",
+		"@typescript-eslint/parser": "^5.27.1",
+		"eslint": "^8.17.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-config-xo": "^0.41.0",
+		"eslint-config-xo-typescript": "^0.51.1",
+		"husky": "^8.0.1",
+		"mustache": "4.2.0",
+		"prettier": "^2.6.2",
+		"typescript": "^4.7.3"
+	}
 }

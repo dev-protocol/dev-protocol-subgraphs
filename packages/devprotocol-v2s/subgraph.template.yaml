@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: STokensManager
-    network: {{network}}
+    network: { { network } }
     source:
       address: '{{address}}'
       abi: STokensManager
-      startBlock: {{startBlock}}
+      startBlock: { { startBlock } }
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -27,18 +27,18 @@ dataSources:
           file: ../abis/v2/Lockup.json
       eventHandlers:
         - event: Minted(uint256,address,address,uint256,uint256)
-          handler: handleSTokensChanged
+          handler: handleStokensChanged
         - event: Updated(uint256,uint256,uint256,uint256,uint256)
-          handler: handleSTokensChanged
+          handler: handleStokensChanged
       file: ./src/mapping.ts
 
   - kind: ethereum
     name: MetricsFactory
-    network: {{network}}
+    network: { { network } }
     source:
       address: '{{metrics-factory-address}}'
       abi: MetricsFactory
-      startBlock: {{startBlock}}
+      startBlock: { { startBlock } }
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

@@ -1,15 +1,15 @@
 {
-  "name": "@subgraph/devprotocol-v2s",
-  "version": "0.1.0",
-  "license": "UNLICENSED",
-  "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/",
-    "create-local": "graph create --node http://localhost:8020/",
-    "remove-local": "graph remove --node http://localhost:8020/",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001",
-    "p:matic": "mustache config/matic.json subgraph.template.yaml > subgraph.yaml",
-    "p:arb": "mustache config/arbitrum-one.json subgraph.template.yaml > subgraph.yaml"
-  }
+	"name": "@subgraph/devprotocol-v2s",
+	"version": "0.1.0",
+	"license": "UNLICENSED",
+	"scripts": {
+		"codegen": "graph codegen",
+		"build": "graph build",
+		"deploy": "graph deploy --node https://api.thegraph.com/deploy/",
+		"create-local": "graph create --node http://localhost:8020/",
+		"remove-local": "graph remove --node http://localhost:8020/",
+		"deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001",
+		"p:matic": "mustache config/matic.json subgraph.template.yaml > subgraph.yaml",
+		"p:arb": "mustache config/arbitrum-one.json subgraph.template.yaml > subgraph.yaml"
+	}
 }
