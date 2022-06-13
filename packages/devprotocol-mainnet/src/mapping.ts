@@ -6,8 +6,12 @@ import {
 } from "../generated/DevToken/EternalStorage"
 import {
   TotalLockedAmount,
+  TotalAuthenticatedProperty
 } from "../generated/schema"
-import { Bytes, Address } from '@graphprotocol/graph-ts'
+import {
+  Create as CreateEvent
+} from "../generated/MetricsFactory_1/MetricsFactory"
+import { Bytes, Address, BigInt  } from '@graphprotocol/graph-ts'
 
 export function handleTransfer(event: TransferEvent): void {
   let day = event.block.timestamp.toI32() / 86400
@@ -26,5 +30,31 @@ export function handleTransfer(event: TransferEvent): void {
     totalLockedAmount.amount = getAllValueResult.value
     totalLockedAmount.save()
   }
+}
+
+export function handleMetricsChanged(event: CreateEvent): void {
+  let day = event.block.timestamp.toI32() / 86400
+  // totalAmount
+  let totalAuthenticatedProperty = TotalAuthenticatedProperty.load(day.toString())
+  if (totalAuthenticatedProperty === null) {
+    totalAuthenticatedProperty = new TotalAuthenticatedProperty(
+      day.toString()
+    )
+  }
+  let eternalStorage = EternalStorage.bind(Address.fromString('0x7F5FC5E49F7eCded3D361EF739619ECb760DcD0b'))
+  let getAuthenticatedProperties = eternalStorage.try_getUint(
+    Bytes.fromHexString('0xd361f1295b0fc1c89cea582568f2b1e03704de9dc1a2ba591754dc3c3f23088a')
+  )
+  if (!getAuthenticatedProperties.reverted && getAuthenticatedProperties.value.notEqual(BigInt.fromI32(0))) {
+    totalAuthenticatedProperty.count = getAuthenticatedProperties.value
+    totalAuthenticatedProperty.save()
+    return
+  }
+
+  let getTotalIssuedMetrics = eternalStorage.try_getUint(
+    Bytes.fromHexString('0xb2c6b8b2c77e4c24f7c5a750a14d2d8b137567832e6b70ab43d2915c87c8e263')
+  )
+  totalAuthenticatedProperty.count = getTotalIssuedMetrics.value
+  totalAuthenticatedProperty.save()
 }
 

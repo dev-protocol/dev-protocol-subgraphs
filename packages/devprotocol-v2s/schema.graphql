@@ -2,3 +2,8 @@ type TotalLockedAmount @entity {
   id: ID! #day
   amount: BigInt! #staking amount
 }
+
+type TotalAuthenticatedProperty @entity {
+  id: ID! #day
+  count: BigInt! #authenticated properties count
+}
