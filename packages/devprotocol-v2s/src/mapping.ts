@@ -1,7 +1,4 @@
-import {
-	Minted as MintedEvent,
-	Updated as UpdatedEvent,
-} from '../generated/STokensManager/STokensManager'
+import { Minted as MintedEvent } from '../generated/STokensManager/STokensManager'
 import { Lockup } from '../generated/STokensManager/Lockup'
 import {
 	TotalLockedAmount,
@@ -11,17 +8,27 @@ import {
 	MetricsFactory,
 	Create as CreateEvent,
 } from '../generated/MetricsFactory/MetricsFactory'
-import { genId, genTimestamp } from '../../utils/generateCommonValues'
+import {
+	genIdLegacy,
+	genId,
+	genTimestamp,
+} from '../../utils/generateCommonValues'
 
 export function handleStokensChanged(event: MintedEvent): void {
+	const lid = genIdLegacy(event)
 	const id = genId(event)
 	const timestamp = genTimestamp(event)
 
-	let totalLockedAmount = TotalLockedAmount.load(id)
+	let totalLockedAmount = TotalLockedAmount.load(lid)
 	if (totalLockedAmount === null) {
-		totalLockedAmount = new TotalLockedAmount(id)
-		totalLockedAmount.timestamp = timestamp
+		totalLockedAmount = TotalLockedAmount.load(id)
+		if (totalLockedAmount === null) {
+			totalLockedAmount = new TotalLockedAmount(id)
+		}
 	}
+
+	totalLockedAmount.id = id
+	totalLockedAmount.timestamp = timestamp
 
 	const lockup = Lockup.bind(event.transaction.to!)
 	const getAllValueResult = lockup.try_totalLocked()
@@ -32,14 +39,20 @@ export function handleStokensChanged(event: MintedEvent): void {
 }
 
 export function handleMetricsChanged(event: CreateEvent): void {
+	const lid = genIdLegacy(event)
 	const id = genId(event)
 	const timestamp = genTimestamp(event)
 
-	let totalAuthenticatedProperty = TotalAuthenticatedProperty.load(id)
+	let totalAuthenticatedProperty = TotalAuthenticatedProperty.load(lid)
 	if (totalAuthenticatedProperty === null) {
-		totalAuthenticatedProperty = new TotalAuthenticatedProperty(id)
-		totalAuthenticatedProperty.timestamp = timestamp
+		totalAuthenticatedProperty = TotalAuthenticatedProperty.load(id)
+		if (totalAuthenticatedProperty === null) {
+			totalAuthenticatedProperty = new TotalAuthenticatedProperty(id)
+		}
 	}
+
+	totalAuthenticatedProperty.id = id
+	totalAuthenticatedProperty.timestamp = timestamp
 
 	const metricsFactory = MetricsFactory.bind(event.address)
 	totalAuthenticatedProperty.count =

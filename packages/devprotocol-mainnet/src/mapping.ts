@@ -6,17 +6,27 @@ import {
 } from '../generated/schema'
 import { Create as CreateEvent } from '../generated/MetricsFactory_1/MetricsFactory'
 import { Bytes, Address, BigInt } from '@graphprotocol/graph-ts'
-import { genId, genTimestamp } from '../../utils/generateCommonValues'
+import {
+	genIdLegacy,
+	genId,
+	genTimestamp,
+} from '../../utils/generateCommonValues'
 
 export function handleTransfer(event: TransferEvent): void {
+	const lid = genIdLegacy(event)
 	const id = genId(event)
 	const timestamp = genTimestamp(event)
 
-	let totalLockedAmount = TotalLockedAmount.load(id)
+	let totalLockedAmount = TotalLockedAmount.load(lid)
 	if (totalLockedAmount === null) {
-		totalLockedAmount = new TotalLockedAmount(id)
-		totalLockedAmount.timestamp = timestamp
+		totalLockedAmount = TotalLockedAmount.load(id)
+		if (totalLockedAmount === null) {
+			totalLockedAmount = new TotalLockedAmount(id)
+		}
 	}
+
+	totalLockedAmount.id = id
+	totalLockedAmount.timestamp = timestamp
 
 	const eternalStorage = EternalStorage.bind(
 		Address.fromString('0x4a154e51b69A798d854E100fDf79e6f0Be0e330D')
@@ -33,14 +43,20 @@ export function handleTransfer(event: TransferEvent): void {
 }
 
 export function handleMetricsChanged(event: CreateEvent): void {
+	const lid = genIdLegacy(event)
 	const id = genId(event)
 	const timestamp = genTimestamp(event)
 
-	let totalAuthenticatedProperty = TotalAuthenticatedProperty.load(id)
+	let totalAuthenticatedProperty = TotalAuthenticatedProperty.load(lid)
 	if (totalAuthenticatedProperty === null) {
-		totalAuthenticatedProperty = new TotalAuthenticatedProperty(id)
-		totalAuthenticatedProperty.timestamp = timestamp
+		totalAuthenticatedProperty = TotalAuthenticatedProperty.load(id)
+		if (totalAuthenticatedProperty === null) {
+			totalAuthenticatedProperty = new TotalAuthenticatedProperty(id)
+		}
 	}
+
+	totalAuthenticatedProperty.id = id
+	totalAuthenticatedProperty.timestamp = timestamp
 
 	const eternalStorage = EternalStorage.bind(
 		Address.fromString('0x7F5FC5E49F7eCded3D361EF739619ECb760DcD0b')

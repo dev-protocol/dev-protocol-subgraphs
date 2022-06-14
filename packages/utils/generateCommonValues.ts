@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import {
-	ethereum,
-	crypto,
-	ByteArray,
-	BigInt,
-	Bytes,
-} from '@graphprotocol/graph-ts'
+import { ethereum, BigInt, Bytes, crypto } from '@graphprotocol/graph-ts'
+
+export const genIdLegacy = (event: ethereum.Event): Bytes =>
+	Bytes.fromUTF8(
+		event.transaction.hash.toHexString() + event.logIndex.toHexString()
+	)
 
 export const genId = (event: ethereum.Event): Bytes =>
 	Bytes.fromByteArray(
-		ByteArray.fromHexString(
-			event.transaction.hash.toHexString() + event.logIndex.toHexString()
+		crypto.keccak256(
+			Bytes.fromUTF8(
+				event.transaction.hash.toHexString() + event.logIndex.toHexString()
+			)
 		)
 	)
 
