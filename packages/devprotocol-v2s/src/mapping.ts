@@ -11,12 +11,16 @@ import {
 	MetricsFactory,
 	Create as CreateEvent,
 } from '../generated/MetricsFactory/MetricsFactory'
+import { genId, genTimestamp } from '../../utils/generateCommonValues'
 
 export function handleStokensChanged(event: MintedEvent): void {
-	const day = event.block.timestamp.toI32() / 86400
-	let totalLockedAmount = TotalLockedAmount.load(day.toString())
+	const id = genId(event)
+	const timestamp = genTimestamp(event)
+
+	let totalLockedAmount = TotalLockedAmount.load(id)
 	if (totalLockedAmount === null) {
-		totalLockedAmount = new TotalLockedAmount(day.toString())
+		totalLockedAmount = new TotalLockedAmount(id)
+		totalLockedAmount.timestamp = timestamp
 	}
 
 	const lockup = Lockup.bind(event.transaction.to!)
@@ -28,13 +32,13 @@ export function handleStokensChanged(event: MintedEvent): void {
 }
 
 export function handleMetricsChanged(event: CreateEvent): void {
-	const day = event.block.timestamp.toI32() / 86400
-	// TotalAmount
-	let totalAuthenticatedProperty = TotalAuthenticatedProperty.load(
-		day.toString()
-	)
+	const id = genId(event)
+	const timestamp = genTimestamp(event)
+
+	let totalAuthenticatedProperty = TotalAuthenticatedProperty.load(id)
 	if (totalAuthenticatedProperty === null) {
-		totalAuthenticatedProperty = new TotalAuthenticatedProperty(day.toString())
+		totalAuthenticatedProperty = new TotalAuthenticatedProperty(id)
+		totalAuthenticatedProperty.timestamp = timestamp
 	}
 
 	const metricsFactory = MetricsFactory.bind(event.address)

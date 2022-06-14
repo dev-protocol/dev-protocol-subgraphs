@@ -5,9 +5,9 @@
 	"scripts": {
 		"codegen": "graph codegen",
 		"build": "graph build",
-		"deploy": "graph deploy --node https://api.thegraph.com/deploy/ dev-protocol/mainnet",
-		"create-local": "graph create --node http://localhost:8020/ dev-protocol/mainnet",
-		"remove-local": "graph remove --node http://localhost:8020/ dev-protocol/mainnet",
-		"deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 dev-protocol/mainnet"
+		"deploy": "graph deploy --node https://api.thegraph.com/deploy/ dev-protocol/mainnet-v2",
+		"create-local": "graph create --node http://localhost:8020/ dev-protocol/mainnet-v2",
+		"remove-local": "graph remove --node http://localhost:8020/ dev-protocol/mainnet-v2",
+		"deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 dev-protocol/mainnet-v2"
 	}
 }
