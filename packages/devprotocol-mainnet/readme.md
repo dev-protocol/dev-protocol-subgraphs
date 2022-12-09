@@ -1,3 +1,9 @@
+## Authentication
+
+```bash
+> graph auth --product hosted-service <ACCESS_TOKEN>
+```
+
 ## Deploy
 
 ```bash
