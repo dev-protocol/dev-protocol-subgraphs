@@ -1,7 +1,7 @@
 ## Authentication
 
 ```bash
-> graph auth --product hosted-service <ACCESS_TOKEN>
+> yarn graph auth --product hosted-service <ACCESS_TOKEN>
 ```
 
 ## Deploy
